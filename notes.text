@@ -1,0 +1,19 @@
+Weather api notes
+
+// onload ask to get user location with built in geolocation api.
+// make call to api based on this, else make call based on preset value.
+
+
+Current weather @ location. - can get this data from the forecast api
+// feilds that will be necesarry to include are:
+  - location -> name
+  - location -> localtime
+  - current -> temp
+  - current -> condition -> text
+  - current -> condition -> icon
+  - current -> wind
+  - current -> wind_dir
+  - current -> precip
+  - current -> humidity
+  - current -> feelslike
+  - current -> uv
