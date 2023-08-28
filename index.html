@@ -18,7 +18,24 @@
       <input type="text" name="location" id="search-input" class="search-input" placeholder="Search" >
       <i class='bx bx-search search-icon'></i>
     </div>
-    <i class='bx bx-cog settings' id="settings-btn"></i>
+    <div class="settings-container">
+      <i class='bx bx-cog settings-icon' id="settings-btn"></i>
+      <div class="settings-dropdown">
+        <div class="setting-item">
+          <input type="checkbox" id="temperature-toggle"/>
+          <label for="temperature-toggle"><span class="left">Celcius</span> <span class="right">Fahrenheit</span></label>
+        </div>
+        <div class="setting-item">
+          <input type="checkbox" id="distance-toggle"/>
+          <label for="distance-toggle"><span class="left">Kilometers</span> <span class="right">Miles</span></label>
+        </div>
+        <div class="setting-item">
+          <input type="checkbox" id="volume-toggle"/>
+          <label for="volume-toggle"><span class="left">Millimeters</span> <span class="right">Inches</span></label>
+        </div>
+      </div>
+    </div>
+    
   </header>
   <script src="script.js"></script>
 </body>
