@@ -4,3 +4,97 @@
   padding: 0;
 }
 
+:root {
+  --text: #fffefc;
+}
+
+body {
+  min-height: 100vh;
+  background: #6D9ED6;
+  background: linear-gradient(135deg, #6D9ED6, #288DC7);
+}
+
+
+/* Header styles */
+
+header {
+  color: var(--text);
+  padding: 1em;
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: 1fr 5fr 1fr;
+}
+
+header .logo {
+  place-self: center left;
+}
+
+header .search-container {
+  position: relative;
+  place-self: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-container input {
+  all: unset;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.2rem;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.3rem 1rem;
+  padding-right: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+input::placeholder {
+  color: rgba(245, 245, 245, 0.8);
+}
+
+.search-container input:focus {
+  background-color: rgba(255, 254, 252, 0.1);
+  outline: 1px solid white;
+}
+
+.search-container .search-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 1rem;
+}
+
+header .settings {
+  font-size: 24px;
+  place-self: center right;
+  cursor: pointer;
+  transition: all ease-in 0.2s;
+}
+
+header .settings:hover {
+  color: rgba(255, 254, 252, 0.8)
+}
+
+
+/* Tablet screen size styles */
+
+@media only screen and (min-width: 768px) {
+
+  /* Header styles */
+  header {
+    padding: 1.5rem 2rem;
+  }
+
+  header .logo {
+    width: 40px;
+  }
+
+  .search-container .search-icon {
+    font-size: 24px;
+  }
+
+  header .settings {
+    font-size: 35px;
+  }
+}
