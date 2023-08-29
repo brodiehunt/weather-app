@@ -396,7 +396,7 @@ header input:active:after {
 }
 
 .compass span.arrow {
-  transform: translate(-50%, -50%) rotate(90deg);
+  
 }
 
 /* Hourly forecast styles */

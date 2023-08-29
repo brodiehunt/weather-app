@@ -1,6 +1,19 @@
+import { formatData } from './utilityFunctions.js';
+
+
 const body = document.querySelector('body');
 const settingsBtn = document.getElementById('settings-btn');
+const button = document.getElementById('button');
 
+const units = {
+  tempUnit: 'c',
+  speedUnit: 'kph',
+  rainUnit: 'mm'
+}
+
+button.addEventListener('click', () => {
+  formatData(units);
+})
 
 settingsBtn.addEventListener('click', (event) => {
   const dropDown = event.target.nextSibling.nextSibling;
