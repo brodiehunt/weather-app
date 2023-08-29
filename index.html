@@ -21,6 +21,7 @@
     <div class="settings-container">
       <i class='bx bx-cog settings-icon' id="settings-btn"></i>
       <div class="settings-dropdown">
+        <p class="title">Settings</p>
         <div class="setting-item">
           <input type="checkbox" id="temperature-toggle"/>
           <label for="temperature-toggle"><span class="left">Celcius</span> <span class="right">Fahrenheit</span></label>
@@ -35,8 +36,172 @@
         </div>
       </div>
     </div>
-    
   </header>
+  <div class="weather-container">
+    <div class="current-weather">
+      <div class="main">
+        <h1 class="location">Sydney</h1>
+        <p class="temp">15°</p>
+        <p class="description">Chance Of MeatBalls</p>
+        <p class="low-high">Low: <span class="low">10c</span> High: <span class="high">20c</span></p>
+      </div>
+      <div class="current-section">
+        <h2 class="title">Current Weather</h2>
+        <div class="current-grid">
+          <div class="UV item">
+            <p class="item-title"><img src="/imgs/sun.png" class="grid-icon"> UV INDEX</p>
+            <div class="center-grid">
+              <p class="value">5.0</p>
+              <p class="qualitative-measure">Medium</p>
+              <div class="uv-gradient"><div class="indicator"></div></div>
+            </div>
+            <p class="statement">Wear sunscreen</p>
+          </div>
+
+          <div class="humidity item">
+            <p class="item-title"><img src="/imgs/humidity.png" class="grid-icon"> HUMITIDY</p>
+            <div class="center-grid">
+              <p class="value">85<span class="measurement">%</span></p>
+            </div>
+            <p class="statement">Dew point is at 10.1°</p>
+          </div>
+
+          <div class="sunrise-set item">
+            <p class="item-title"><img src="/imgs/sunset.png" class="grid-icon"> SUNSET</p>
+            <div class="center-grid">
+              <p class="sunrise-time value">5:30<span class="measurement">pm</span></p>
+            </div>
+            <p class="other-set statement">Sunrise this morning at <span>6:20</span></p>
+          </div>
+
+          <div class="precipitation item">
+            <p class="item-title"><img src="/imgs/water.png" class="grid-icon"> PRECIPITATE</p>
+            <div class="center-grid">
+              <p class="value">10<span class="measurement">mm</span></p>
+            </div>
+            <p class="statement">Expected rainfall today is: <span></span></p>
+          </div>
+
+          <div class="wind item">
+            <p class="item-title"><img src="/imgs/wind.png" class="grid-icon"> WIND</p>
+            <div class="compass">
+              <span class="north">N</span>
+              <span class="east">E</span>
+              <span class="south">S</span>
+              <span class="west">W</span>
+              <span class="direction">NW</span>
+              <span class="arrow"></span>
+            </div>
+            <p class="statement">Wind speed 33km/ph</p>
+          </div>
+
+          <div class="feels-like item">
+            <p class="item-title"><img src="/imgs/thermometer.png" class="grid-icon"> FEELS LIKE</p>
+            <div class="center-grid">
+              <p class="value"><span>18°</span></p>
+            </div>
+            <p class="statement">Similar to temperature</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="hourly-container">
+      <h2 class="title">24 Hour Forecast</h2>
+      <select class="hourly-select" name="condition" id="condition">
+        <option value="weather">Weather</option>
+        <option value="wind">Wind</option>
+        <option value="precipitation">Precipitation</option>
+        <option value="UV">UV Index</option>
+        <option value="humidity">Humidity</option>
+        <option value="feels-like">Feels Like</option>
+      </select>
+      <div class="item-container">
+        <div class="hour-item">
+          <div class="time">00:00</div>
+          <div class="info">
+            <img src="/imgs/sun.png" class="icon">
+            <p class="temp">15°</p>
+            <p class="description">Clear</p>
+          </div>
+        </div>
+        <div class="hour-item">
+          <div class="time">00:00</div>
+          <div class="info">
+            <p class="wind-direction">NW</p>
+            <p class="wind-speed">24Km p/h</p>
+          </div>
+        </div>
+        <div class="hour-item">
+          <div class="time">00:00</div>
+          <div class="info">
+            <p class="humidity">85<span class="measurement">%</span></p>
+            <p class="dew">dew point is <span>13.0</span></p>
+          </div>
+        </div>
+        <div class="hour-item">
+          <div class="time">00:00</div>
+          <div class="info">
+            <p class="UV">5.0</p>
+            <p class="UV-description">Low</p>
+          </div>
+        </div>
+        <div class="hour-item">
+          <div class="time">00:00</div>
+          <div class="info">
+            <p class="precipitation">10<span class="measurement">mm</span></p>
+
+          </div>
+        </div>
+        <div class="hour-item">
+          <div class="time">00:00</div>
+          <div class="info">
+            
+          </div>
+        </div>
+        <div class="hour-item">
+          <div class="time">00:00</div>
+          <div class="info">
+            
+          </div>
+        </div>
+        <div class="hour-item">
+          <div class="time">00:00</div>
+          <div class="info">
+            
+          </div>
+        </div>
+        <div class="hour-item">
+          <div class="time">00:00</div>
+          <div class="info">
+            
+          </div>
+        </div>
+        <div class="hour-item">
+          <div class="time">00:00</div>
+          <div class="info">
+            
+          </div>
+        </div>
+        <div class="hour-item">
+          <div class="time">00:00</div>
+          <div class="info">
+            
+          </div>
+        </div>
+        <div class="hour-item">
+          <div class="time">00:00</div>
+          <div class="info">
+            
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="day-container">
+
+    </div>
+  </div>
   <script src="script.js"></script>
 </body>
 
