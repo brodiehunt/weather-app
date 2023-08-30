@@ -1,10 +1,11 @@
 import { formatData } from './utilityFunctions.js';
 
+let recentData;
 
 const body = document.querySelector('body');
 const settingsBtn = document.getElementById('settings-btn');
 const button = document.getElementById('button');
-
+const secondBtn = document.getElementById('second-button');
 const units = {
   tempUnit: 'c',
   speedUnit: 'kph',
@@ -12,8 +13,14 @@ const units = {
 }
 
 button.addEventListener('click', () => {
-  formatData(units);
+  formatData(units)
 })
+
+secondBtn.addEventListener('click', () => {
+  console.log('recent data persisting', recentData);
+})
+
+
 
 settingsBtn.addEventListener('click', (event) => {
   const dropDown = event.target.nextSibling.nextSibling;
