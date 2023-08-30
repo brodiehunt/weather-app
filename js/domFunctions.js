@@ -88,6 +88,7 @@ const displayCurrentWeather = (data) => {
   feelslikeStatement.innerText = feelsStatement;
 }
 
+// 24 hour condition data display
 const display24HourWeather = (data) => {
   const itemContainer = document.querySelector('.item-container');
   itemContainer.innerHTML = '';
@@ -123,6 +124,7 @@ const display24HourWeather = (data) => {
   })
 }
 
+// 24 hour wind data display
 const display24HourWind = (data) => {
   const itemContainer = document.querySelector('.item-container');
   itemContainer.innerHTML = '';
@@ -153,6 +155,7 @@ const display24HourWind = (data) => {
   });
 }
 
+// 24 hours precipitation data display
 const display24HourPrecip = (data) => {
   const itemContainer = document.querySelector('.item-container');
   itemContainer.innerHTML = '';
@@ -184,6 +187,7 @@ const display24HourPrecip = (data) => {
   });
 }
 
+// 24 hours UV data display
 const display24HourUv = (data) => {
   const itemContainer = document.querySelector('.item-container');
   itemContainer.innerHTML = '';
@@ -215,6 +219,7 @@ const display24HourUv = (data) => {
   });
 }
 
+// 24 hour humidity data display
 const display24HourHumidity = (data) => {
   const itemContainer = document.querySelector('.item-container');
   itemContainer.innerHTML = '';
@@ -251,6 +256,7 @@ const display24HourHumidity = (data) => {
   });
 }
 
+// build single day forcecast
 const displaySingleDayForecast = (data) => {
   const dayItem = document.createElement('div');
   dayItem.classList.add('day-item');
@@ -401,6 +407,7 @@ const displaySingleDayForecast = (data) => {
 
 }
 
+// build 3 day Forecast display
 const display3DayForecast = (data) => {
   const forecastContainer = document.querySelector('.day-container');
   forecastContainer.innerHTML = '';
@@ -413,19 +420,6 @@ const display3DayForecast = (data) => {
     forecastContainer.appendChild(dayDiv);
   })
 }
-
-const changeTemperatureMeasurement = (newTempMes) => {
-
-}
-
-const changeSpeedMeasurement = (newSpeedMes) => {
-
-}
-
-const changeRainMeasurement = (newRainMes) => {
-
-}
-
 
 export {
   displayCurrentWeather,

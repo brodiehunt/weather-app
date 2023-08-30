@@ -9,98 +9,177 @@ import { displayCurrentWeather,
       } from './domFunctions.js';
 
      
-
-      
-
-const formatData = async (units) => {
-  const {tempUnit, speedUnit, rainUnit } = units;
-
-  const data = await getWeatherData();
-  localStorage.setItem('currentData', JSON.stringify(data));
-  const currentWeatherData = extractCurrentData(data, units);
-  const next24HourData = extract24HourWeather(data, units);
-  // const next24HourWind = extract24HourWind(data, units);
-  // const next24HourPrecip = extract24HourPrecip(data, units);
-  // const next24HourUv = extract24HourUv(data);
-  // const next24HourHumidity = extract24HourHumidity(data, units);
-  const next3DayData = extract3DayData(data, units);
+// Gets current time
+const getCurrentTime = () => {
+  const now = new Date();
   
-
+  const dayOfWeek = now.toLocaleString('en-US', { weekday: 'short' });
+  const month = now.toLocaleString('en-US', { month: 'short' });  
+  const day = now.getDate();
+  const dateString = `${dayOfWeek} ${day} ${month}`;
+  const hour = now.getHours();
   
-  displayCurrentWeather(currentWeatherData);
-  display24HourWeather(next24HourData);
-  // display24HourWind(next24HourWind);
-  // display24HourPrecip(next24HourPrecip);
-  // display24HourUv(next24HourUv);
-  // display24HourHumidity(next24HourHumidity);
-  display3DayForecast(next3DayData);
-
-  return data;
-  
+  return {hour, dateString};
 }
 
+// builds icon src path based on url provided
+const getIconPath = (url) => {
+  const lastIndex = url.lastIndexOf('/');
+    const secondLastIndex = url.lastIndexOf('/', lastIndex - 1);
+    let path = url.slice(secondLastIndex);
+    path = `./imgs${path}`;
+    return path;
+}
+
+// determines uv description based on uv value
+const uvDesc = (uv) => {
+  let desc;
+  if (uv < 3) {
+     desc ='Low';
+  } else if (uv < 6) {
+    desc = 'Moderate';
+  } else if (uv < 8) {
+    desc = "High"
+  } else if (uv < 10) {
+    desc = "Very High";
+  } else {
+    desc = "Extreme";
+  }
+  return desc;
+}
+
+// pass this function 'forecastday' array
+const extractHourSegments = (data) => {
+  // current hour (also index we need)
+  const { hour } = getCurrentTime();
+  // today and tomorrow data
+  const today24Hours = data[0].hour;
+  const tomorrow24Hours = data[1].hour;
+  // now to end of the day
+  const restOfToday = today24Hours.splice(hour, today24Hours.length);
+  // start of tomorrow to 24 hours from now
+  const startOfTomorrow = tomorrow24Hours.splice(0, hour);
+  // array - next 24 hours
+  const next24Hours = restOfToday.concat(startOfTomorrow);
+  
+  return next24Hours
+};
+
+const extract24HourWeather = (data, units) => {
+  const { tempUnit } = units
+  const forecastDayData = data.forecast.forecastday;
+  const next24Hours = extractHourSegments(forecastDayData)
+  
+  const neededData = next24Hours.map((obj) => {
+    const neededObj = {};
+    const {time, condition: { text, icon }, temp_c, temp_f} = obj;
+    // time in format 00:00;
+    neededObj.time = time.slice(time.length - 5);
+    neededObj.text = text;
+    // path in format '/night/398.png'
+    neededObj.path = getIconPath(icon);
+    neededObj.temp = (tempUnit === 'c') ? temp_c : temp_f;
+    return neededObj;
+  })
+  return neededData;
+}
+
+// 24 hour wind data
+const extract24HourWind = (data, units) => {
+  const { speedUnit } = units
+  const forecastDayData = data.forecast.forecastday;
+  const next24Hours = extractHourSegments(forecastDayData);
+  const neededData = next24Hours.map((obj) => {
+    const windData = {};
+    const { wind_mph, wind_kph, wind_dir, time } = obj;
+    windData.wind = (speedUnit === 'kph') ? wind_kph : wind_mph;
+    windData.windDir = wind_dir;
+    windData.time = time.slice(time.length - 5);
+    windData.unit = speedUnit;
+    return windData;
+  })
+  return neededData;
+}
+
+// 24 hour precipitation data
+const extract24HourPrecip = (data, units) => {
+  const {rainUnit} = units;
+  const forecastDayData = data.forecast.forecastday;
+  const next24Hours = extractHourSegments(forecastDayData);
+  const neededData = next24Hours.map((obj) => {
+    const precipData = {};
+    const {precip_mm, precip_in, time} = obj;
+    precipData.time = time.slice(time.length -5);
+    precipData.precip = (rainUnit === 'mm') ? precip_mm : precip_in;
+    precipData.unit = rainUnit;
+    return precipData;
+  })
+  return neededData;
+}
+
+// 24 hour UV data 
+const extract24HourUv = (data) => {
+  const forecastDayData = data.forecast.forecastday;
+  const next24Hours = extractHourSegments(forecastDayData);
+  const neededData = next24Hours.map((obj) => {
+    const uvData = {};
+    const { uv, time } = obj;
+    uvData.time = time.slice(time.length - 5);
+    uvData.uv = uv;
+    uvData.description = uvDesc(uv);
+    return uvData;
+  })
+  return neededData;
+}
+
+// 24 hour humidity 
+const extract24HourHumidity = (data, units) => {
+  const { tempUnit } = units;
+  const forecastDayData = data.forecast.forecastday;
+  const next24Hours = extractHourSegments(forecastDayData);
+  const neededData = next24Hours.map((obj) => {
+    const humidityData = {};
+    const { time, humidity, dewpoint_c, dewpoint_f } = obj;
+    humidityData.time = time.slice(time.length -5);
+    humidityData.humidity = humidity;
+    humidityData.dewpoint = (tempUnit === 'c') ? dewpoint_c : dewpoint_f;
+    return humidityData;
+  })
+  return neededData;
+}
+
+// retrieve current displayed data from local storage
 const pullDataLclStorage = () => {
   const retrievedData = JSON.parse(localStorage.getItem('currentData'));
   return retrievedData;
-}
+};
 
-const changeUnitsData = (units, current24) => {
-  const data = pullDataLclStorage();
-  const currentWeatherData = extractCurrentData(data, units);
-  const next3DayData = extract3DayData(data, units);
-
-  displayCurrentWeather(currentWeatherData);
-  display3DayForecast(next3DayData);
-  if (current24 === 'weather') {
-    console.log('weather')
-    const next24HourData = extract24HourWeather(data, units);
-    display24HourWeather(next24HourData);
-  } else if (current24 === 'wind') {
-    console.log('wind')
-    const next24HourWind = extract24HourWind(data, units)
-    display24HourWind(next24HourWind);
-  } else if (current24 === 'humidity') {
-    console.log('humidity')
-    const next24HourHumidity = extract24HourHumidity(data, units);
-    display24HourHumidity(next24HourHumidity);
-  } else if ( current24 === 'UV') {
-    console.log('UV')
-    const next24HourUv = extract24HourUv(data, units);
-    display24HourUv(next24HourUv);
-  } else {
-    console.log('precip')
-    const next24HourPrecip = extract24HourPrecip(data, units);
-    display24HourPrecip(next24HourPrecip);
-  }
-
-}
-
-const change24HourData = (value, units) => {
-  const data = pullDataLclStorage();
-
+// choose which 24 hour setting to display based on current select value
+const determine24HourDisplay = (value, data, units) => {
   if (value === 'weather') {
-    console.log('weather')
+    
     const next24HourData = extract24HourWeather(data, units);
     display24HourWeather(next24HourData);
   } else if (value === 'wind') {
-    console.log('wind')
+    
     const next24HourWind = extract24HourWind(data, units)
     display24HourWind(next24HourWind);
   } else if (value === 'humidity') {
-    console.log('humidity')
+    
     const next24HourHumidity = extract24HourHumidity(data, units);
     display24HourHumidity(next24HourHumidity);
   } else if (value === 'UV') {
-    console.log('UV')
+    
     const next24HourUv = extract24HourUv(data, units);
     display24HourUv(next24HourUv);
   } else {
-    console.log('precip')
+    
     const next24HourPrecip = extract24HourPrecip(data, units);
     display24HourPrecip(next24HourPrecip);
   }
 }
 
+// extract all 'current data' from data
 const extractCurrentData = (data, units) => {
   const {tempUnit, speedUnit, rainUnit } = units;
   const currentData = data.current;
@@ -143,6 +222,7 @@ const extractCurrentData = (data, units) => {
   return extractedData;
 }
 
+// extract needed data for next 3 days;
 const extract3DayData = (data, units) => {
   const { tempUnit, rainUnit } = units;
   const forecastDayData = data.forecast.forecastday;
@@ -152,7 +232,6 @@ const extract3DayData = (data, units) => {
     const { day: {maxtemp_c, maxtemp_f, mintemp_c, mintemp_f, avgtemp_c, avgtemp_f,
     totalprecip_mm, totalprecip_in, avghumidity, uv, condition: {text, icon}},
     astro: { sunrise, sunset}} = singleDay;
-    
     if (tempUnit === 'c') {
       singleDayData.maxTemp = maxtemp_c;
       singleDayData.minTemp = mintemp_c;
@@ -162,23 +241,11 @@ const extract3DayData = (data, units) => {
       singleDayData.minTemp = mintemp_f;
       singleDayData.avgTemp = avgtemp_f;
     }
-
-
     singleDayData.precip = (rainUnit === 'mm') ? totalprecip_mm : totalprecip_in;
     singleDayData.precipUnit = rainUnit;
     singleDayData.humidity = avghumidity;
     singleDayData.uv = uv;
-    if (uv < 3) {
-      singleDayData.uvDescription = 'Low';
-    } else if (uv < 6) {
-      singleDayData.uvDescription = 'Moderate';
-    } else if (uv < 8) {
-      singleDayData.uvDescription = "High"
-    } else if (uv < 10) {
-      singleDayData.uvDescription = "Very High";
-    } else {
-      singleDayData.uvDescription = "Extreme";
-    }
+    singleDayData.uvDescription = uvDesc(uv);
     singleDayData.iconPath = getIconPath(icon);
     singleDayData.condition = text;
     singleDayData.sunset = sunset.slice(1, 5);
@@ -188,149 +255,39 @@ const extract3DayData = (data, units) => {
   return neededData;
 }
 
-const extract24HourWeather = (data, units) => {
-  const { tempUnit } = units
-  const forecastDayData = data.forecast.forecastday;
-  const next24Hours = extractHourSegments(forecastDayData)
-  
-  const neededData = next24Hours.map((obj) => {
-    let neededObj = {};
-    // need to pull out the time, icon path, temp, text
-    const {time, condition: { text, icon }, temp_c, temp_f} = obj;
-    // time in format 00:00;
-    neededObj.time = time.slice(time.length - 5);
-    neededObj.text = text;
-    // path in format '/night/398.png'
-    neededObj.path = getIconPath(icon);
-  
-    neededObj.temp = (tempUnit === 'c') ? temp_c : temp_f;
-    return neededObj;
-  })
+// refesh page from local storage data after unit change
+const changeUnitsData = (units, current24) => {
+  const data = pullDataLclStorage();
+  const currentWeatherData = extractCurrentData(data, units);
+  const next3DayData = extract3DayData(data, units);
+  displayCurrentWeather(currentWeatherData);
+  display3DayForecast(next3DayData);
 
-  return neededData;
+  determine24HourDisplay(current24, data, units);
   
 }
 
-// 24 hour wind data
-const extract24HourWind = (data, units) => {
-  const { speedUnit } = units
-  const forecastDayData = data.forecast.forecastday;
-  const next24Hours = extractHourSegments(forecastDayData);
-  const neededData = next24Hours.map((obj) => {
-    let windData = {};
-
-    const { wind_mph, wind_kph, wind_dir, time } = obj;
-    windData.wind = (speedUnit === 'kph') ? wind_kph : wind_mph;
-    windData.windDir = wind_dir;
-    windData.time = time.slice(time.length - 5);
-    windData.unit = speedUnit;
-    return windData;
-  })
-
-  return neededData;
+const change24HourData = (value, units) => {
+  const data = pullDataLclStorage();
+  determine24HourDisplay(value, data, units);
 }
 
-// 24 hour precipitation data
-const extract24HourPrecip = (data, units) => {
-  const {rainUnit} = units;
-  const forecastDayData = data.forecast.forecastday;
-  const next24Hours = extractHourSegments(forecastDayData);
-  const neededData = next24Hours.map((obj) => {
-    const precipData = {};
-    const {precip_mm, precip_in, time} = obj;
-    precipData.time = time.slice(time.length -5);
-    precipData.precip = (rainUnit === 'mm') ? precip_mm : precip_in;
-    precipData.unit = rainUnit;
-    return precipData;
-  })
-  return neededData;
-}
-
-// 24 hour UV data 
-const extract24HourUv = (data) => {
-  const forecastDayData = data.forecast.forecastday;
-  const next24Hours = extractHourSegments(forecastDayData);
-  const neededData = next24Hours.map((obj) => {
-    const uvData = {};
-    const { uv, time } = obj;
-    uvData.time = time.slice(time.length - 5);
-    uvData.uv = uv;
-    if (uv < 3) {
-      uvData.description = 'Low';
-    } else if (uv < 6) {
-      uvData.description = 'Moderate';
-    } else if (uv < 8) {
-      uvData.description = "High"
-    } else if (uv < 10) {
-      uvData.description = "Very High";
-    } else {
-      uvData.description = "Extreme";
-    }
-    return uvData;
-  })
-  return neededData;
-}
-
-// 24 hour humidity 
-const extract24HourHumidity = (data, units) => {
-  const { tempUnit } = units;
-  const forecastDayData = data.forecast.forecastday;
-  const next24Hours = extractHourSegments(forecastDayData);
-  const neededData = next24Hours.map((obj) => {
-    const humidityData = {};
-    const { time, humidity, dewpoint_c, dewpoint_f } = obj;
-    humidityData.time = time.slice(time.length -5);
-    humidityData.humidity = humidity;
-    humidityData.dewpoint = (tempUnit === 'c') ? dewpoint_c : dewpoint_f;
-    return humidityData;
-  })
-  return neededData;
-}
-
-
-
-// pass this function 'forecastday' array
-const extractHourSegments = (data) => {
-  // current hour (also index we need)
-  const { hour } = getCurrentTime();
-  // console.log('hour extract', hour)
+// function that handles async call 
+const formatData = async (units) => {
   
-  // extract 48 hours worth of data
-  const today24Hours = data[0].hour;
-  const tomorrow24Hours = data[1].hour;
-  // get data from now to end of the day
-  const restOfToday = today24Hours.splice(hour, today24Hours.length);
-  // get data from start of tomorrow to 24 hours from now
-  const startOfTomorrow = tomorrow24Hours.splice(0, hour);
-  // array of next 24 hours of data over two days
-  const next24Hours = restOfToday.concat(startOfTomorrow);
+  const data = await getWeatherData();
+  localStorage.setItem('currentData', JSON.stringify(data));
+  const currentWeatherData = extractCurrentData(data, units);
+  const next24HourData = extract24HourWeather(data, units);
+  const next3DayData = extract3DayData(data, units);
+  displayCurrentWeather(currentWeatherData);
+  display24HourWeather(next24HourData);
+  display3DayForecast(next3DayData);
+
+  // Error Handling needed; 
+  return data;
   
-  return next24Hours
 }
-
-// builds icon src path based on url provided
-const getIconPath = (url) => {
-  const lastIndex = url.lastIndexOf('/');
-    const secondLastIndex = url.lastIndexOf('/', lastIndex - 1);
-    let path = url.slice(secondLastIndex);
-    path = `./imgs${path}`;
-    return path;
-}
-
-// Gets current time
-const getCurrentTime = () => {
-  const now = new Date();
-  
-  const dayOfWeek = now.toLocaleString('en-US', { weekday: 'short' });
-  const month = now.toLocaleString('en-US', { month: 'short' });  
-  const day = now.getDate();
-  const dateString = `${dayOfWeek} ${day} ${month}`;
-  const hour = now.getHours();
-  
-  return {hour, dateString};
-}
-
-
 
 export {
   formatData,
