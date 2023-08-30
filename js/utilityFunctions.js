@@ -8,30 +8,97 @@ import { displayCurrentWeather,
         display3DayForecast 
       } from './domFunctions.js';
 
+     
+
+      
+
 const formatData = async (units) => {
   const {tempUnit, speedUnit, rainUnit } = units;
 
   const data = await getWeatherData();
+  localStorage.setItem('currentData', JSON.stringify(data));
   const currentWeatherData = extractCurrentData(data, units);
-  // const next24HourData = extract24HourWeather(data, units);
+  const next24HourData = extract24HourWeather(data, units);
   // const next24HourWind = extract24HourWind(data, units);
   // const next24HourPrecip = extract24HourPrecip(data, units);
   // const next24HourUv = extract24HourUv(data);
-  const next24HourHumidity = extract24HourHumidity(data, units);
+  // const next24HourHumidity = extract24HourHumidity(data, units);
   const next3DayData = extract3DayData(data, units);
-  console.log(next3DayData);
+  
 
   
   displayCurrentWeather(currentWeatherData);
-  // display24HourWeather(next24HourData);
+  display24HourWeather(next24HourData);
   // display24HourWind(next24HourWind);
   // display24HourPrecip(next24HourPrecip);
   // display24HourUv(next24HourUv);
-  display24HourHumidity(next24HourHumidity);
+  // display24HourHumidity(next24HourHumidity);
   display3DayForecast(next3DayData);
 
   return data;
   
+}
+
+const pullDataLclStorage = () => {
+  const retrievedData = JSON.parse(localStorage.getItem('currentData'));
+  return retrievedData;
+}
+
+const changeUnitsData = (units, current24) => {
+  const data = pullDataLclStorage();
+  const currentWeatherData = extractCurrentData(data, units);
+  const next3DayData = extract3DayData(data, units);
+
+  displayCurrentWeather(currentWeatherData);
+  display3DayForecast(next3DayData);
+  if (current24 === 'weather') {
+    console.log('weather')
+    const next24HourData = extract24HourWeather(data, units);
+    display24HourWeather(next24HourData);
+  } else if (current24 === 'wind') {
+    console.log('wind')
+    const next24HourWind = extract24HourWind(data, units)
+    display24HourWind(next24HourWind);
+  } else if (current24 === 'humidity') {
+    console.log('humidity')
+    const next24HourHumidity = extract24HourHumidity(data, units);
+    display24HourHumidity(next24HourHumidity);
+  } else if ( current24 === 'UV') {
+    console.log('UV')
+    const next24HourUv = extract24HourUv(data, units);
+    display24HourUv(next24HourUv);
+  } else {
+    console.log('precip')
+    const next24HourPrecip = extract24HourPrecip(data, units);
+    display24HourPrecip(next24HourPrecip);
+  }
+
+}
+
+const change24HourData = (value, units) => {
+  const data = pullDataLclStorage();
+
+  if (value === 'weather') {
+    console.log('weather')
+    const next24HourData = extract24HourWeather(data, units);
+    display24HourWeather(next24HourData);
+  } else if (value === 'wind') {
+    console.log('wind')
+    const next24HourWind = extract24HourWind(data, units)
+    display24HourWind(next24HourWind);
+  } else if (value === 'humidity') {
+    console.log('humidity')
+    const next24HourHumidity = extract24HourHumidity(data, units);
+    display24HourHumidity(next24HourHumidity);
+  } else if (value === 'UV') {
+    console.log('UV')
+    const next24HourUv = extract24HourUv(data, units);
+    display24HourUv(next24HourUv);
+  } else {
+    console.log('precip')
+    const next24HourPrecip = extract24HourPrecip(data, units);
+    display24HourPrecip(next24HourPrecip);
+  }
 }
 
 const extractCurrentData = (data, units) => {
@@ -49,7 +116,9 @@ const extractCurrentData = (data, units) => {
   const feelslike = (tempUnit === 'c') ? currentData.feelslike_c : currentData.feelslike_f;
   const precip = (rainUnit === 'mm') ? currentData.precip_mm : currentData.precip_in;
   const totalPrecip = (rainUnit === 'mm') ? data.forecast.forecastday[0].day.totalprecip_mm : data.forecast.forecastday[0].day.totalprecip_mm;
+  const precipUnit = rainUnit;
   const wind = (speedUnit === 'kph') ? currentData.wind_kph : currentData.wind_mph;
+  const windUnit = speedUnit;
   const location = data.location.name;
   const extractedData = {
     text,
@@ -64,7 +133,9 @@ const extractCurrentData = (data, units) => {
     feelslike,
     precip,
     totalPrecip,
+    precipUnit,
     wind,
+    windUnit,
     location,
     sunrise,
     sunset
@@ -262,5 +333,7 @@ const getCurrentTime = () => {
 
 
 export {
-  formatData
+  formatData,
+  change24HourData,
+  changeUnitsData
 }

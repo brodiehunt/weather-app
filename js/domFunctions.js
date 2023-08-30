@@ -59,16 +59,18 @@ const displayCurrentWeather = (data) => {
 
   // precipitation 
   const currentPrecipitation = document.getElementById('current-precip');
+  const currentRainUnitSpan = document.getElementById('current-rain-unit');
   const totalPrecipitation = document.getElementById('current-today-precip');
   currentPrecipitation.innerText = data.precip;
-  totalPrecipitation.innerText = data.totalPrecip;
+  currentRainUnitSpan.innerText = data.precipUnit;
+  totalPrecipitation.innerText = `${data.totalPrecip} ${data.precipUnit}`;
   
   // wind 
   const currentWindDir = document.getElementById('current-wind-dir');
   const currentWindSpeed = document.getElementById('current-wind-speed');
   const directionArrow = document.querySelector('.arrow');
   currentWindDir.innerText = data.wind_dir;
-  currentWindSpeed.innerText = data.wind;
+  currentWindSpeed.innerText = `${data.wind} ${data.windUnit}`;
   directionArrow.style.transform = `translate(-50%, -50%) rotate(${data.wind_degree}deg)`;
 
   // feels like 

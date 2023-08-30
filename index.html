@@ -27,12 +27,12 @@
           <label for="temperature-toggle"><span class="left">Celcius</span> <span class="right">Fahrenheit</span></label>
         </div>
         <div class="setting-item">
-          <input type="checkbox" id="distance-toggle"/>
-          <label for="distance-toggle"><span class="left">Kilometers</span> <span class="right">Miles</span></label>
+          <input type="checkbox" id="speed-toggle"/>
+          <label for="speed-toggle"><span class="left">Kilometers</span> <span class="right">Miles</span></label>
         </div>
         <div class="setting-item">
-          <input type="checkbox" id="volume-toggle"/>
-          <label for="volume-toggle"><span class="left">Millimeters</span> <span class="right">Inches</span></label>
+          <input type="checkbox" id="rain-toggle"/>
+          <label for="rain-toggle"><span class="left">Millimeters</span> <span class="right">Inches</span></label>
         </div>
       </div>
     </div>
@@ -79,9 +79,9 @@
           <div class="precipitation item">
             <p class="item-title"><img src="/imgs/water.png" class="grid-icon"> PRECIPITATE</p>
             <div class="center-grid">
-              <p class="value"><span id="current-precip">10</span><span class="measurement">mm</span></p>
+              <p class="value"><span id="current-precip">10</span><span class="measurement" id="current-rain-unit">mm</span></p>
             </div>
-            <p class="statement">Expected rainfall today is: <span id="current-today-precip"></span> mm</p>
+            <p class="statement">Expected rainfall today is: <span id="current-today-precip"></span></p>
           </div>
 
           <div class="wind item">
@@ -94,7 +94,7 @@
               <span class="direction" id="current-wind-dir">NW</span>
               <span class="arrow"></span>
             </div>
-            <p class="statement">Wind speed <span id="current-wind-speed">33</span>kph</p>
+            <p class="statement">Wind speed <span id="current-wind-speed">33</span></p>
           </div>
 
           <div class="feels-like item">
@@ -116,7 +116,6 @@
         <option value="precipitation">Precipitation</option>
         <option value="UV">UV Index</option>
         <option value="humidity">Humidity</option>
-        <option value="feels-like">Feels Like</option>
       </select>
       <div class="item-container">
         <div class="hour-item">
