@@ -554,7 +554,7 @@ header input:active:after {
 .day-item .flex-row-container {
   display: flex;
   flex-wrap: nowrap;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 
 .day-item p {
@@ -566,6 +566,16 @@ header input:active:after {
 .inline-container .main {
   font-size: 1rem;
   color: var(--text);
+}
+
+.inline-container {
+  text-align: center;
+}
+.condition.inline-container {
+  max-width: 50px;
+}
+.condition img {
+  max-width: 32px;
 }
 
 .inline-container .main .measurement {

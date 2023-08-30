@@ -4,7 +4,8 @@ import { displayCurrentWeather,
         display24HourWind, 
         display24HourPrecip,
         display24HourUv,
-        display24HourHumidity 
+        display24HourHumidity,
+        display3DayForecast 
       } from './domFunctions.js';
 
 const formatData = async (units) => {
@@ -17,6 +18,8 @@ const formatData = async (units) => {
   // const next24HourPrecip = extract24HourPrecip(data, units);
   // const next24HourUv = extract24HourUv(data);
   const next24HourHumidity = extract24HourHumidity(data, units);
+  const next3DayData = extract3DayData(data, units);
+  console.log(next3DayData);
 
   
   displayCurrentWeather(currentWeatherData);
@@ -25,6 +28,8 @@ const formatData = async (units) => {
   // display24HourPrecip(next24HourPrecip);
   // display24HourUv(next24HourUv);
   display24HourHumidity(next24HourHumidity);
+  display3DayForecast(next3DayData);
+
   return data;
   
 }
@@ -67,7 +72,53 @@ const extractCurrentData = (data, units) => {
   return extractedData;
 }
 
+const extract3DayData = (data, units) => {
+  const { tempUnit, rainUnit } = units;
+  const forecastDayData = data.forecast.forecastday;
+
+  const neededData = forecastDayData.map((singleDay) => {
+    const singleDayData = {};
+    const { day: {maxtemp_c, maxtemp_f, mintemp_c, mintemp_f, avgtemp_c, avgtemp_f,
+    totalprecip_mm, totalprecip_in, avghumidity, uv, condition: {text, icon}},
+    astro: { sunrise, sunset}} = singleDay;
+    
+    if (tempUnit === 'c') {
+      singleDayData.maxTemp = maxtemp_c;
+      singleDayData.minTemp = mintemp_c;
+      singleDayData.avgTemp = avgtemp_c
+    } else {
+      singleDayData.maxTemp = maxtemp_f;
+      singleDayData.minTemp = mintemp_f;
+      singleDayData.avgTemp = avgtemp_f;
+    }
+
+
+    singleDayData.precip = (rainUnit === 'mm') ? totalprecip_mm : totalprecip_in;
+    singleDayData.precipUnit = rainUnit;
+    singleDayData.humidity = avghumidity;
+    singleDayData.uv = uv;
+    if (uv < 3) {
+      singleDayData.uvDescription = 'Low';
+    } else if (uv < 6) {
+      singleDayData.uvDescription = 'Moderate';
+    } else if (uv < 8) {
+      singleDayData.uvDescription = "High"
+    } else if (uv < 10) {
+      singleDayData.uvDescription = "Very High";
+    } else {
+      singleDayData.uvDescription = "Extreme";
+    }
+    singleDayData.iconPath = getIconPath(icon);
+    singleDayData.condition = text;
+    singleDayData.sunset = sunset.slice(1, 5);
+    singleDayData.sunrise = sunrise.slice(1, 5);
+    return singleDayData;
+  })
+  return neededData;
+}
+
 const extract24HourWeather = (data, units) => {
+  const { tempUnit } = units
   const forecastDayData = data.forecast.forecastday;
   const next24Hours = extractHourSegments(forecastDayData)
   
@@ -81,7 +132,7 @@ const extract24HourWeather = (data, units) => {
     // path in format '/night/398.png'
     neededObj.path = getIconPath(icon);
   
-    neededObj.temp = temp_c;
+    neededObj.temp = (tempUnit === 'c') ? temp_c : temp_f;
     return neededObj;
   })
 
@@ -164,13 +215,8 @@ const extract24HourHumidity = (data, units) => {
   })
   return neededData;
 }
-const getIconPath = (url) => {
-  const lastIndex = url.lastIndexOf('/');
-    const secondLastIndex = url.lastIndexOf('/', lastIndex - 1);
-    let path = url.slice(secondLastIndex);
-    path = `./imgs${path}`;
-    return path;
-}
+
+
 
 // pass this function 'forecastday' array
 const extractHourSegments = (data) => {
@@ -189,6 +235,15 @@ const extractHourSegments = (data) => {
   const next24Hours = restOfToday.concat(startOfTomorrow);
   
   return next24Hours
+}
+
+// builds icon src path based on url provided
+const getIconPath = (url) => {
+  const lastIndex = url.lastIndexOf('/');
+    const secondLastIndex = url.lastIndexOf('/', lastIndex - 1);
+    let path = url.slice(secondLastIndex);
+    path = `./imgs${path}`;
+    return path;
 }
 
 // Gets current time

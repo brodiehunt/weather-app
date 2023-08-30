@@ -249,12 +249,167 @@ const display24HourHumidity = (data) => {
   });
 }
 
-const displaySingleDayForecast = () => {
+const displaySingleDayForecast = (data) => {
+  const dayItem = document.createElement('div');
+  dayItem.classList.add('day-item');
+
+  const itemTitle = document.createElement('h3');
+  itemTitle.innerText = 'title';
+  dayItem.appendChild(itemTitle);
+
+  const flexContainer = document.createElement('div');
+  flexContainer.classList.add('flex-row-container');
+  dayItem.appendChild(flexContainer);
+  const conditionContainer = document.createElement('div');
+  conditionContainer.classList.add('condition', 'inline-container');
+
+  // condition
+  const conditionIcon = document.createElement('img');
+  conditionIcon.src = data.iconPath;
+
+  const conditionDescription = document.createElement('p');
+  conditionDescription.classList.add('description');
+  conditionDescription.innerText = data.condition;
+
+  conditionContainer.appendChild(conditionIcon);
+  conditionContainer.appendChild(conditionDescription);
+  flexContainer.appendChild(conditionContainer);
+
+  // temp
+  const tempContainer = document.createElement('div');
+  tempContainer.classList.add('temperature', 'inline-container');
+
+  const tempIcon = document.createElement('img');
+  tempIcon.src = "./imgs/thermometer.png";
+
+  const tempAv = document.createElement('p');
+  tempAv.classList.add('temp-av', 'main');
+  tempAv.innerText = `${data.avgTemp}°`;
+
+  const tempMax = document.createElement('p');
+  tempMax.classList.add('max');
+  tempMax.innerText = `Max: ${data.maxTemp}°`;
+
+  const tempMin = document.createElement('p');
+  tempMin.classList.add('min');
+  tempMin.innerText = `Min: ${data.minTemp}°`;
+
+  tempContainer.appendChild(tempIcon);
+  tempContainer.appendChild(tempAv);
+  tempContainer.appendChild(tempMin);
+  tempContainer.appendChild(tempMax);
+  flexContainer.appendChild(tempContainer);
+
+  // Precipitation
+  const precipContainer = document.createElement('div');
+  precipContainer.classList.add('precipitation', 'inline-container');
+  
+  const precipIcon = document.createElement('img');
+  precipIcon.src = "./imgs/water.png";
+
+  const precipAv = document.createElement('p');
+  precipAv.classList.add('precip-av', 'main');
+  precipAv.innerText = data.precip;
+
+  const precipMeasure = document.createElement('span');
+  precipMeasure.classList.add('measurement');
+  precipMeasure.innerText = data.precipUnit;
+
+  precipContainer.appendChild(precipIcon);
+  precipContainer.appendChild(precipAv);
+  precipAv.appendChild(precipMeasure);
+
+  flexContainer.appendChild(precipContainer)
+
+  // humidity
+  const humidityContainer = document.createElement('div');
+  humidityContainer.classList.add('inline-container', 'humidity');
+  
+  const humidityIcon = document.createElement('img');
+  humidityIcon.src = "./imgs/humidity.png";
+
+  const humidityAv = document.createElement('p');
+  humidityAv.classList.add('humidity-av', 'main');
+  humidityAv.innerText = data.humidity;
+
+  const humidityMeasure = document.createElement('span');
+  humidityMeasure.classList.add('measurement');
+  humidityMeasure.innerText = '%';
+
+  humidityContainer.appendChild(humidityIcon);
+  humidityContainer.appendChild(humidityAv);
+  humidityAv.appendChild(humidityMeasure);
+  flexContainer.appendChild(humidityContainer);
+
+  // UV
+  const uvContainer = document.createElement('div');
+  uvContainer.classList.add('UV-index', 'inline-container');
+  
+  const uvIcon = document.createElement('img');
+  uvIcon.src = "./imgs/sun.png";
+
+  const uvAv = document.createElement('p');
+  uvAv.classList.add('main', 'UV-av');
+  uvAv.innerText = data.uv;
+
+  const uvDescription = document.createElement('p');
+  uvDescription.classList.add('descr');
+  uvDescription.innerText = data.uvDescription;
+
+  uvContainer.appendChild(uvIcon);
+  uvContainer.appendChild(uvAv);
+  uvContainer.appendChild(uvDescription);
+  flexContainer.appendChild(uvContainer);
+
+  // sunrise 
+  const sunriseContainer = document.createElement('div');
+  sunriseContainer.classList.add('sunrise', 'inline-container');
+
+  const sunriseIcon = document.createElement('img');
+  sunriseIcon.src = "./imgs/sunrise.png";
+
+  const sunrise = document.createElement('p');
+  sunrise.classList.add('time', 'main');
+  sunrise.innerText = data.sunrise;
+
+  sunriseContainer.appendChild(sunriseIcon);
+  sunriseContainer.appendChild(sunrise);
+  
+
+  // sunset
+  const sunsetContainer = document.createElement('div');
+  sunsetContainer.classList.add('sunset', 'inline-container');
+
+  const sunsetIcon = document.createElement('img');
+  sunsetIcon.src = "./imgs/sunset.png";
+
+  const sunset = document.createElement('p');
+  sunset.classList.add('time', 'main');
+  sunset.innerText = data.sunset;
+
+  sunsetContainer.appendChild(sunsetIcon);
+  sunsetContainer.appendChild(sunset);
+  
+  const sunsriseSetContainer = document.createElement('div');
+  sunsriseSetContainer.appendChild(sunriseContainer);
+  sunsriseSetContainer.appendChild(sunsetContainer);
+  flexContainer.appendChild(sunsriseSetContainer);
+
+  return dayItem;
 
 }
 
-const display3DayForecast = () => {
-
+const display3DayForecast = (data) => {
+  const forecastContainer = document.querySelector('.day-container');
+  forecastContainer.innerHTML = '';
+  const title = document.createElement('h2');
+  title.classList.add('title');
+  title.innerText = '3 Day Forecast';
+  forecastContainer.appendChild(title);
+  data.forEach((day) => {
+    const dayDiv = displaySingleDayForecast(day);
+    forecastContainer.appendChild(dayDiv);
+  })
 }
 
 const changeTemperatureMeasurement = (newTempMes) => {
@@ -276,5 +431,6 @@ export {
   display24HourWind,
   display24HourPrecip,
   display24HourUv,
-  display24HourHumidity
+  display24HourHumidity,
+  display3DayForecast
 }
