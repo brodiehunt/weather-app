@@ -18,7 +18,9 @@ const getWeatherData = async (url) => {
           } 
           const data = await retryResponse.json();
           return data;
-        }
+        } 
+        alert(`Error: ${errorData.error.message}`);
+        return null;
       }
       const data = await response.json();
       return data;

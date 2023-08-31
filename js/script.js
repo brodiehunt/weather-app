@@ -46,6 +46,15 @@ inputEl.addEventListener('keyup', (event) => {
   }
 })
 
+// search btn 
+const searchBtn = document.querySelector('.search-icon');
+searchBtn.addEventListener('click', () => {
+  console.log('clicked');
+  if (inputEl.value.length > 2) {
+    formatData(units, inputEl.value);
+  }
+})
+
 
 
 // settings button dropdown interactivity

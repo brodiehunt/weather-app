@@ -21,7 +21,8 @@ const buildURL = (searchVal) => {
   const key = '5751146771b54199bce54112232108';
   let string = searchVal;
   // remove whitespace before, after, and within;
-  string = string.trim().replace(/\s+/g, '');
+  string = string.trim();
+  string = string.replace(' ', '+');
   // replace commas with +
   string = string.replace(',', '+');
   
