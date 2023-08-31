@@ -25,7 +25,7 @@ const buildURL = (searchVal) => {
   // replace commas with +
   string = string.replace(',', '+');
   
-  const URL = `http://api.weatherapi.com/v1/forecast.json?key=${key}&q=${string}&days=3`;
+  const URL = `https://api.weatherapi.com/v1/forecast.json?key=${key}&q=${string}&days=3`;
 
   return URL;
 }
