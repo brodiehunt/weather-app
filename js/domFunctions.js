@@ -7,11 +7,11 @@ const nightOrDay = (val) => {
   if (val) {
     body.classList.remove('night');
     direction.classList.remove('night');
-    logo.src = "./imgs/logo-icon-day.png";
+    logo.src = "imgs/logo-icon-day.png";
   } else {
     body.classList.add('night');
     direction.classList.add('night');
-    logo.src = "./imgs/logo-icon-night.png";
+    logo.src = "imgs/logo-icon-night.png";
   }
 }
 const displayCurrentWeather = (data) => {
