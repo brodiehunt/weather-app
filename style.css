@@ -64,6 +64,10 @@ header .search-container {
   cursor: pointer;
 }
 
+.search-container .input.invalid {
+  border: 1px solid red;
+}
+
 input::placeholder {
   color: rgba(245, 245, 245, 0.8);
 }
@@ -73,6 +77,10 @@ input::placeholder {
   outline: 1px solid white;
 }
 
+.search-container input:focus.invalid {
+  outline: 1px solid red;
+  border-color: red;
+}
 .search-container .search-icon {
   position: absolute;
   top: 50%;

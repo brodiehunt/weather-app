@@ -10,11 +10,22 @@ const units = {
 // Search location input
 const inputEl = document.getElementById('search-input');
 inputEl.addEventListener('keyup', (event) => {
+  if (event.target.value.length > 2) {
+    inputEl.classList.remove('invalid');
+  }
   if (event.key === 'Enter') {
-    const searchVal = event.target.value;
-    formatData(units, searchVal);
+    if (event.target.value.length > 2) {
+      const searchVal = event.target.value;
+      formatData(units, searchVal);
+      inputEl.classList.remove('invalid');
+    } else {
+      inputEl.classList.add('invalid');
+    }
+    
   }
 })
+
+
 
 // settings button dropdown interactivity
 const settingsBtn = document.getElementById('settings-btn');

@@ -18,7 +18,8 @@ const displayCurrentWeather = (data) => {
   // location 
   const currentLocation = document.getElementById('location');
   currentLocation.innerText = data.location;
-
+  const locationCountry = document.querySelector('.location-country');
+  locationCountry.innerText = data.locationCountry;
   // temp 
   const currentTemp = document.getElementById('current-temp');
   currentTemp.innerText = data.temp;

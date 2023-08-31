@@ -220,6 +220,7 @@ const extractCurrentData = (data, units) => {
   const wind = (speedUnit === 'kph') ? currentData.wind_kph : currentData.wind_mph;
   const windUnit = speedUnit;
   const location = data.location.name;
+  const locationCountry = data.location.country;
   const {is_day} = currentData;
   nightOrDay(is_day);
   const extractedData = {
@@ -239,6 +240,7 @@ const extractCurrentData = (data, units) => {
     wind,
     windUnit,
     location,
+    locationCountry,
     sunrise,
     sunset
   }
