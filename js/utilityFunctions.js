@@ -9,14 +9,28 @@ import { displayCurrentWeather,
         nightOrDay
       } from './domFunctions.js';
 
-     
+
 // Gets current time
-const getCurrentHour = (val) => {
+const getCurrentHour = () => {
   const now = new Date();
   const hour = now.getHours();
   return hour;
 }
 
+const buildURL = (searchVal) => {
+  const key = '5751146771b54199bce54112232108';
+  let string = searchVal;
+  // remove whitespace before, after, and within;
+  string = string.trim().replace(/\s+/g, '');
+  // replace commas with +
+  string = string.replace(',', '+');
+  
+  const URL = `http://api.weatherapi.com/v1/forecast.json?key=${key}&q=${string}&days=3`;
+
+  return URL;
+}
+
+// gets date in format day - thus / date 8 / - month Aug
 const getDateString = (val) => {
   const now = new Date();
 
@@ -283,9 +297,9 @@ const change24HourData = (value, units) => {
 }
 
 // function that handles async call 
-const formatData = async (units) => {
-  
-  const data = await getWeatherData();
+const formatData = async (units, searchVal) => {
+  const url = buildURL(searchVal);
+  const data = await getWeatherData(url);
   localStorage.setItem('currentData', JSON.stringify(data));
   const currentWeatherData = extractCurrentData(data, units);
   const next24HourData = extract24HourWeather(data, units);
@@ -302,5 +316,6 @@ const formatData = async (units) => {
 export {
   formatData,
   change24HourData,
-  changeUnitsData
+  changeUnitsData,
+  buildURL
 }

@@ -7,10 +7,13 @@ const units = {
   rainUnit: 'mm'
 }
 
-// Only function to make api call to weatherAPI
-const button = document.getElementById('button');
-button.addEventListener('click', () => {
-  formatData(units)
+// Search location input
+const inputEl = document.getElementById('search-input');
+inputEl.addEventListener('keyup', (event) => {
+  if (event.key === 'Enter') {
+    const searchVal = event.target.value;
+    formatData(units, searchVal);
+  }
 })
 
 // settings button dropdown interactivity
