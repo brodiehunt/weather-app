@@ -1,7 +1,16 @@
 
-
+const nightOrDay = (val) => {
+  const body = document.querySelector('body');
+  const logo = document.querySelector('.logo');
+  if (val) {
+    body.classList.remove('night');
+    logo.src = "/imgs/logo-icon-day.png";
+  } else {
+    body.classList.add('night');
+    logo.src = "/imgs/logo-icon-night.png";
+  }
+}
 const displayCurrentWeather = (data) => {
-
   // location 
   const currentLocation = document.getElementById('location');
   currentLocation.innerText = data.location;
@@ -428,5 +437,6 @@ export {
   display24HourPrecip,
   display24HourUv,
   display24HourHumidity,
-  display3DayForecast
+  display3DayForecast,
+  nightOrDay
 }

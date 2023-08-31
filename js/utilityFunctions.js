@@ -5,7 +5,8 @@ import { displayCurrentWeather,
         display24HourPrecip,
         display24HourUv,
         display24HourHumidity,
-        display3DayForecast 
+        display3DayForecast,
+        nightOrDay
       } from './domFunctions.js';
 
      
@@ -199,6 +200,8 @@ const extractCurrentData = (data, units) => {
   const wind = (speedUnit === 'kph') ? currentData.wind_kph : currentData.wind_mph;
   const windUnit = speedUnit;
   const location = data.location.name;
+  const {is_day} = currentData;
+  nightOrDay(is_day);
   const extractedData = {
     text,
     humidity,
