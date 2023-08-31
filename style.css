@@ -22,6 +22,11 @@ body.night {
   background-size: cover;
   background-position: center;
 }
+.compass span.direction.night {
+  background: url('/imgs/backgroundnight.jpg');
+  background-size: cover;
+  background-position: center;
+}
 
 
 /* Header styles */

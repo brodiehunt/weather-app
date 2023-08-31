@@ -11,16 +11,22 @@ import { displayCurrentWeather,
 
      
 // Gets current time
-const getCurrentTime = () => {
+const getCurrentHour = (val) => {
   const now = new Date();
-  
+  const hour = now.getHours();
+  return hour;
+}
+
+const getDateString = (val) => {
+  const now = new Date();
+
+  now.setDate(now.getDate() + val);
   const dayOfWeek = now.toLocaleString('en-US', { weekday: 'short' });
   const month = now.toLocaleString('en-US', { month: 'short' });  
   const day = now.getDate();
   const dateString = `${dayOfWeek} ${day} ${month}`;
-  const hour = now.getHours();
-  
-  return {hour, dateString};
+
+  return dateString;
 }
 
 // builds icon src path based on url provided
@@ -52,7 +58,7 @@ const uvDesc = (uv) => {
 // pass this function 'forecastday' array
 const extractHourSegments = (data) => {
   // current hour (also index we need)
-  const { hour } = getCurrentTime();
+  const hour  = getCurrentHour();
   // today and tomorrow data
   const today24Hours = data[0].hour;
   const tomorrow24Hours = data[1].hour;
@@ -230,7 +236,7 @@ const extract3DayData = (data, units) => {
   const { tempUnit, rainUnit } = units;
   const forecastDayData = data.forecast.forecastday;
 
-  const neededData = forecastDayData.map((singleDay) => {
+  const neededData = forecastDayData.map((singleDay, index) => {
     const singleDayData = {};
     const { day: {maxtemp_c, maxtemp_f, mintemp_c, mintemp_f, avgtemp_c, avgtemp_f,
     totalprecip_mm, totalprecip_in, avghumidity, uv, condition: {text, icon}},
@@ -244,6 +250,7 @@ const extract3DayData = (data, units) => {
       singleDayData.minTemp = mintemp_f;
       singleDayData.avgTemp = avgtemp_f;
     }
+    singleDayData.dateString = getDateString(index);
     singleDayData.precip = (rainUnit === 'mm') ? totalprecip_mm : totalprecip_in;
     singleDayData.precipUnit = rainUnit;
     singleDayData.humidity = avghumidity;

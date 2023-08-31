@@ -2,11 +2,15 @@
 const nightOrDay = (val) => {
   const body = document.querySelector('body');
   const logo = document.querySelector('.logo');
+  const direction = document.querySelector('.direction');
+
   if (val) {
     body.classList.remove('night');
+    direction.classList.remove('night');
     logo.src = "/imgs/logo-icon-day.png";
   } else {
     body.classList.add('night');
+    direction.classList.add('night');
     logo.src = "/imgs/logo-icon-night.png";
   }
 }
@@ -271,7 +275,7 @@ const displaySingleDayForecast = (data) => {
   dayItem.classList.add('day-item');
 
   const itemTitle = document.createElement('h3');
-  itemTitle.innerText = 'title';
+  itemTitle.innerText = data.dateString;
   dayItem.appendChild(itemTitle);
 
   const flexContainer = document.createElement('div');
