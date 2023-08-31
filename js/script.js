@@ -1,11 +1,33 @@
 import { formatData, change24HourData, changeUnitsData } from './utilityFunctions.js';
 
+
 // global state of measurement units / default;
 const units = {
   tempUnit: 'c',
   speedUnit: 'kph',
   rainUnit: 'mm'
 }
+
+const defaultSearchVal = 'sydney, australia';
+
+document.addEventListener('DOMContentLoaded', () => {
+  if ('geolocation' in navigator) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const lat = position.coords.latitude.toFixed(4);
+      const lon = position.coords.longitude.toFixed(4);
+      console.log(lat, lon);
+      const locationVal = `${lat},${lon}`;
+      formatData(units, locationVal);
+    }, (error) => {
+      console.log("error getting location: ", error)
+      formatData(units, defaultSearchVal);
+      // my browser didnt give me permission so it went into this block
+    })
+  } else {
+    console.log("geolocation api not supported in this browser");
+    formatData(units, defaultSearchVal);
+  }
+})
 
 // Search location input
 const inputEl = document.getElementById('search-input');
