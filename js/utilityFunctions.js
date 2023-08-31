@@ -301,17 +301,25 @@ const change24HourData = (value, units) => {
 // function that handles async call 
 const formatData = async (units, searchVal) => {
   const url = buildURL(searchVal);
-  const data = await getWeatherData(url);
-  localStorage.setItem('currentData', JSON.stringify(data));
-  const currentWeatherData = extractCurrentData(data, units);
-  const next24HourData = extract24HourWeather(data, units);
-  const next3DayData = extract3DayData(data, units);
-  displayCurrentWeather(currentWeatherData);
-  display24HourWeather(next24HourData);
-  display3DayForecast(next3DayData);
 
-  // Error Handling needed; 
-  return data;
+  
+    const data = await getWeatherData(url);
+    
+    localStorage.setItem('currentData', JSON.stringify(data));
+    const currentWeatherData = extractCurrentData(data, units);
+    const next24HourData = extract24HourWeather(data, units);
+    const next3DayData = extract3DayData(data, units);
+    displayCurrentWeather(currentWeatherData);
+    display24HourWeather(next24HourData);
+    display3DayForecast(next3DayData);
+ 
+    
+  
+  
+  
+
+
+
   
 }
 

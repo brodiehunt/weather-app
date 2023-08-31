@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     navigator.geolocation.getCurrentPosition((position) => {
       const lat = position.coords.latitude.toFixed(4);
       const lon = position.coords.longitude.toFixed(4);
-      console.log(lat, lon);
       const locationVal = `${lat},${lon}`;
       formatData(units, locationVal);
     }, (error) => {
