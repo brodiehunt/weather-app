@@ -4,39 +4,30 @@ const getWeatherData = async (url) => {
       const response = await fetch(url);
 
       if (!response.ok) {
-        let errorData = await response.json();
+        const errorData = await response.json();
 
-        switch (errorData.error.code) {
-          case '1006':
-            alert('No location found. Please use a different location');
-            break;
-          case '9999':
-            let retryResponse = await fetch(url);
-            if (!retryResponse.ok) {
-              alert("Internal application error. Try again later.")
-            } else {
-              let data = await retryResponse.json();
-              return data;
-            }
-          break;
-          default:
-            alert(`Error: ${errorData.error.message}`);
-            break
-        };
-
-      } else {
-        let data = await response.json();
-        return data;
+        if (errorData.error.code === '1006') {
+          alert('No location found. Please use a different location');
+          return null; 
+        }
+        if (errorData.error.code === '9999') {
+          const retryResponse = await fetch(url);
+          if (!retryResponse.ok) {
+            alert("Internal application error. Try again later.")
+            return null;
+          } 
+          const data = await retryResponse.json();
+          return data;
+        }
       }
+      const data = await response.json();
+      return data;
+
     } catch (err) {
       console.error(`Unexpected err: ${err}`);
       alert('An error occured. Please try again later');
+      return null;
     }
-    
-
-    
-  
-  
 };
 
 export default getWeatherData;
